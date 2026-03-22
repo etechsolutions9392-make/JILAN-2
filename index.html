@@ -4936,34 +4936,130 @@ nav .p-4 button:active {
         <button class="nav-btn admin-only hidden-view flex items-center gap-3 px-4 py-3 rounded-lg text-left" data-target="settings-section">
             <i class="fas fa-cog w-5"></i> ⚙️ Store Settings
         </button>
-<!-- ========================================== -->
-        <!-- PERFECTLY MATCHED SUPPORT HUB NAV BUTTON   -->
-        <!-- ========================================== -->
-        <li id="nav-support" onclick="forceOpenSupport()" class="sidebar-item group flex items-center p-3 rounded-xl cursor-pointer transition-all duration-300 hover:bg-white/10 dark:hover:bg-gray-800">
-            <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform shadow-sm">
-                <i class="fas fa-headset text-lg drop-shadow-sm"></i>
-            </div>
-            <!-- FIXED: Text color changed to gray-700/gray-200 to perfectly match other buttons -->
-            <span class="ml-4 font-bold text-white-700 dark:text-gray-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Support Hub</span>
-        </li>
+<!-- 1. ADD THIS ENHANCED STYLE BLOCK FOR THE SIDEBAR BUTTON -->
+<style>
+    /* --- CONTINUOUS HUD SHINE ANIMATION (SIDEBAR) --- */
+    @keyframes sidebar-shine-sweep {
+        0% { left: -100%; }
+        20% { left: 200%; }
+        100% { left: 200%; }
+    }
 
-        <!-- OVERRIDE SCRIPT (Keep this right below the button) -->
-        <script>
-            function forceOpenSupport() {
-                // 1. Hide every existing page section
-                document.querySelectorAll('.app-section').forEach(function(section) {
-                    section.classList.add('hidden-view');
-                });
-                
-                // 2. Force the Support section to appear
-                const supportSection = document.getElementById('support-section');
-                if (supportSection) {
-                    supportSection.classList.remove('hidden-view');
-                } else {
-                    alert("Error: Cannot find the Support section. Ensure the support code was pasted at the bottom of the file!");
-                }
-            }
-        </script>
+    /* HUD Sidebar Button (Adapted for vertical menu) */
+    .btn-sidebar-hud {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border-radius: 0.85rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1.5px;
+        display: flex;
+        align-items: center;
+        border: 1px solid rgba(165, 180, 252, 0.5);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        color: white !important;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+        cursor: pointer;
+        margin-top: 0.5rem;
+        
+        /* Deep physical 3D button shadow & Indigo Gradient */
+        background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%) !important;
+        box-shadow: 0 6px 0 #1e1b4b, 0 15px 25px rgba(67, 56, 202, 0.4), inset 0 2px 2px rgba(255,255,255,0.4) !important;
+        z-index: 10;
+    }
+
+    /* Glowing Icon Container */
+    .btn-sidebar-hud .icon-box {
+        position: relative;
+        z-index: 2;
+        width: 35px;
+        height: 35px;
+        border-radius: 0.6rem;
+        background: rgba(255,255,255,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
+    }
+    
+    .btn-sidebar-hud i {
+        font-size: 1.15rem;
+        filter: drop-shadow(0 0 6px currentColor);
+        transition: transform 0.3s ease;
+    }
+    
+    .btn-sidebar-hud span {
+        position: relative;
+        z-index: 2; 
+    }
+
+    /* Continuous Holographic Sweep */
+    .btn-sidebar-hud::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 150%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+        transform: skewX(-25deg);
+        z-index: 0;
+        animation: sidebar-shine-sweep 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+    }
+    
+    /* Cyber Scanlines Overlay */
+    .btn-sidebar-hud::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .btn-sidebar-hud:hover {
+        transform: translateY(-3px);
+        filter: brightness(1.25);
+        box-shadow: 0 6px 0 #1e1b4b, 0 20px 35px rgba(67, 56, 202, 0.6), inset 0 2px 2px rgba(255,255,255,0.6) !important;
+    }
+    .btn-sidebar-hud:hover i {
+        transform: scale(1.2) rotate(-10deg);
+    }
+    .btn-sidebar-hud:active {
+        transform: translateY(4px) !important;
+        box-shadow: 0 2px 0 #1e1b4b, inset 0 6px 15px rgba(0,0,0,0.7) !important;
+    }
+</style>
+
+<!-- 2. REPLACE YOUR EXISTING SUPPORT HUB SIDEBAR BUTTON WITH THIS -->
+<button id="nav-support" type="button" onclick="forceOpenSupport()" class="btn-sidebar-hud group">
+    <div class="icon-box">
+        <i class="fas fa-headset drop-shadow-sm"></i>
+    </div>
+    <span>Support Hub</span>
+</button>
+
+<!-- Keep your existing override script right below it -->
+<script>
+    function forceOpenSupport() {
+        // 1. Hide every existing page section
+        document.querySelectorAll('.app-section').forEach(function(section) {
+            section.classList.add('hidden-view');
+        });
+        
+        // 2. Force the Support section to appear
+        const supportSection = document.getElementById('support-section');
+        if (supportSection) {
+            supportSection.classList.remove('hidden-view');
+        } else {
+            alert("Error: Cannot find the Support section. Ensure the support code was pasted at the bottom of the file!");
+        }
+    }
+</script>
     </div>
     
     <div class="p-4 border-t border-green-700 dark:border-gray-700 flex flex-col gap-2 z-10">
